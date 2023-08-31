@@ -25,10 +25,8 @@ display_names = list(column_name_map.keys())
 # # Establish a filepath to the oracle_cards.csv file
 # filepath = Path('/Users/alexanderbriody/Desktop/Coding Temple/capstone_2/covid_data_streamlit_app/covid_data_streamlit_app/src/data/covid_data_eng.csv')
 
-filepath = os.path.join(Path(__file__).parents[1], 'data/covid_data_eng.csv')
-df = pd.read_csv(filepath, low_memory=False)
-
-df = pd.read_csv(filepath, low_memory=False)
+# filepath = os.path.join(Path(__file__).parents[1], 'data/covid_data_eng.csv')
+# df = pd.read_csv(filepath, low_memory=False)
 
 # Create an instance of the ToMongo class
 mongo = ToMongo()

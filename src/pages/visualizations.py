@@ -63,19 +63,27 @@ y_column = st.selectbox('Select a ranking range:', options=y_column_options)
 
 # Check if both dropdowns are selected before filtering and plotting
 if type_vis != 'Choose an Option' and x_column != 'Choose an Option' and y_column != 'Choose an Option':
+    # # Sort the data by rank if the selected column is 'Rank Percent Deaths'
+    # if x_column == 'rankPercentDeaths':
+    #     data = data.sort_values(by='rankPercentDeaths', ascending=True)  # Reverse the ranking order
+    
     # Filter data based on y_column selection
     if y_column == 'Top 25 Countries':
         if x_column == 'rankPercentRecovered' or x_column == 'rankPercentDeaths':
             data = data[data[x_column] >= 1].nsmallest(25, x_column)
+        elif x_column == 'percentDeaths':  # Reversed logic for percentage columns
+            data = data[data[x_column] != -1].nsmallest(25, x_column)  # Changed to nsmallest
         else:
             data = data[data[x_column] != -1].nlargest(25, x_column)
     elif y_column == 'Bottom 25 Countries':
         if x_column == 'rankPercentRecovered' or x_column == 'rankPercentDeaths':
             data = data[data[x_column] <= data[x_column].max()].nlargest(25, x_column)
+        elif x_column == 'percentDeaths':  # Reversed logic for percentage columns
+            data = data[data[x_column] != -1].nlargest(25, x_column)  # Changed to nlargest
         else:
             data = data[data[x_column] != -1].nsmallest(25, x_column)
     else:
-        # For 'totalCases', 'totalDeaths', 'totalRecovered', 'percentDeaths', 'percentRecovered'
+        # For 'totalCases', 'totalDeaths', 'totalRecovered', 'percentRecovered'
         if y_column == 'Top 25 Countries':
             data = data[data[x_column] != -1].nlargest(25, x_column)
         else:
@@ -117,6 +125,10 @@ if type_vis != 'Choose an Option' and x_column != 'Choose an Option' and y_colum
         # Display ranked list
         st.write("Ranked List for rankPercentDeaths:")
         ranked_data = data[['country', 'rankPercentDeaths']]
+
+        # Convert the rankPercentDeaths column to integer, excluding 'DPRK' row
+        ranked_data['rankPercentDeaths'] = ranked_data['rankPercentDeaths'].apply(lambda x: int(x) if x != 'DPRK' else x)
+
         ranked_data_html = ranked_data.to_html(index=False)
         st.write(ranked_data_html, unsafe_allow_html=True)
         

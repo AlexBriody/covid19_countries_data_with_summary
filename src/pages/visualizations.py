@@ -91,14 +91,14 @@ if type_vis != 'Choose an Option' and x_column != 'Choose an Option' and y_colum
 
      # Plot the selected visualization type
     if type_vis == 'Histogram':
-        fig = px.histogram(data, x='country', y=x_column)
+        fig = px.histogram(data, x='country', y=x_column, hover_data=['country', x_column])
         fig.update_xaxes(title_text='Countries')  # Correct the x-axis label
         fig.update_xaxes(tickangle=45)  # Angle the x-axis labels
         fig.update_yaxes(title_text=x_column_display, tickprefix='')  # Update y-axis label
         fig.update_layout(height=600, width=1000)  
         st.plotly_chart(fig, use_container_width=True)
     elif type_vis == 'Line Chart':
-        fig = px.line(data, x='country', y=x_column)
+        fig = px.line(data, x='country', y=x_column, hover_data=['country', x_column])
         fig.update_xaxes(title_text='Countries')  # Correct the x-axis label
         fig.update_xaxes(tickangle=45)
         fig.update_yaxes(title_text=x_column_display, tickprefix='')  # Update y-axis label 
@@ -126,9 +126,10 @@ if type_vis != 'Choose an Option' and x_column != 'Choose an Option' and y_colum
         st.write("Ranked List for rankPercentDeaths:")
         ranked_data = data[['country', 'rankPercentDeaths']]
 
-        # Convert the rankPercentDeaths column to integer, excluding 'DPRK' row
-        ranked_data['rankPercentDeaths'] = ranked_data['rankPercentDeaths'].apply(lambda x: int(x) if x != 'DPRK' else x)
-
+        # # Convert the rankPercentDeaths column to integer, excluding 'DPRK' row
+        # ranked_data['rankPercentDeaths'] = ranked_data['rankPercentDeaths'].apply(lambda x: int(x) if x != 'DPRK' else x)
+        ranked_data['rankPercentDeaths'] = ranked_data['rankPercentDeaths'].astype(int)
+        
         ranked_data_html = ranked_data.to_html(index=False)
         st.write(ranked_data_html, unsafe_allow_html=True)
         
